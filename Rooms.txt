@@ -1,0 +1,4 @@
+Kitchen,0,Living Room,Bathroom,null,null
+Living Room,1,null,Bedroom,Kitchen,null
+Bedroom,2,null,null,Bathroom,Living Room
+Bathroom,3,Bathroom,null,null,Kitchen
