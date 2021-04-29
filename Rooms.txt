@@ -1,4 +1,4 @@
-Kitchen,0,Living Room,Bathroom,null,null
-Living Room,1,null,Bedroom,Kitchen,null
-Bedroom,2,null,null,Bathroom,Living Room
-Bathroom,3,Bathroom,null,null,Kitchen
+Kitchen,0,Living Room,Bathroom,null,null,The kitchen has a fridge and a dining table
+Living Room,1,null,Bedroom,Kitchen,null,The living room has a sofa and tv
+Bedroom,2,null,null,Bathroom,Living Room,The bedroom has a bed with flowery bed sheets
+Bathroom,3,Bathroom,null,null,Kitchen,The bathroom has a toilet sink and window
