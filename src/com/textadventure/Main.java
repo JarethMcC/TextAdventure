@@ -13,6 +13,14 @@ public class Main {
     String roomName;
     int roomNumber;
     boolean loop = false;
+    String[] lookAround = {"look around", "look at room"};
+    String[] lookAt = {"look at", "examine"};
+    String[] look = {"look"};
+    String[] whereCanIGo = {"where can"};
+    String[] help = {"help"};
+    String[] quit = {"quit", "exit"};
+    String[] navigate = {"go", "navigate", "travel", "walk"};
+    String[] save = {"save"};
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -37,7 +45,8 @@ public class Main {
                 String readInput = fileReader.nextLine();
                 String[] asList = readInput.split(",");
                 int castNumber = Integer.parseInt(asList[1]);
-                Room newRoom = new Room(asList[0], castNumber, asList[2], asList[3], asList[4], asList[5], asList[6]);
+                int castInitialVisit = Integer.parseInt(asList[8]);
+                Room newRoom = new Room(asList[0], castNumber, asList[2], asList[3], asList[4], asList[5], asList[6], asList[7], castInitialVisit);
                 roomList[i] = newRoom;
                 i++;
             }
@@ -85,32 +94,67 @@ public class Main {
         String unParsed = input.nextLine();
         String[] toParse = unParsed.split(" ");
 
-        if (toParse[0].equalsIgnoreCase("go")) {
-            navigation(toParse[1]);
-        } else if (toParse[0].equalsIgnoreCase("where") && toParse[1].equalsIgnoreCase("can")
-                && toParse[2].equalsIgnoreCase("i") && toParse[3].equalsIgnoreCase("go")) {
-            viableDirections();
-        } else if (toParse[0].equalsIgnoreCase("look") && toParse[1].equalsIgnoreCase("around")){
-            printRoomDescription();
-            printStaticItemCurrentRoom();
-        } else if (toParse[0].equalsIgnoreCase("look")) {
-            lookDirection(toParse[1]);
-        } else if (toParse[0].equalsIgnoreCase("help")) {
-            help();
-        }else if (toParse[0].equalsIgnoreCase("save")) {
-            saveGame();
-        } else if (toParse[0].equalsIgnoreCase("quit") || toParse[0].equalsIgnoreCase("exit")) {
-            System.out.println("Thank you for playing");
-            loop = true;
-        } else {
-            System.out.println("I don't recognise \"" + unParsed);
+        for (int i = 0; i < lookAround.length; i++) {
+            if (unParsed.toLowerCase().contains(lookAround[i])) {
+                printRoomDescription();
+                printStaticItemCurrentRoom();
+                return;
+            }
+        }
+        for (int i = 0; i < lookAt.length; i++) {
+            if (unParsed.toLowerCase().contains(lookAt[i])) {
+                printStaticItemDescription(toParse[toParse.length - 1]);
+                return;
+            }
+        }
+        for (int i = 0; i < look.length; i++) {
+            if (unParsed.toLowerCase().contains(look[i])) {
+                lookDirection(toParse[toParse.length - 1]);
+                return;
+            }
+        }
+        for (int i = 0; i < whereCanIGo.length; i++) {
+            if (unParsed.toLowerCase().contains(whereCanIGo[i])) {
+                viableDirections();
+                return;
+            }
+        }
+        for (int i = 0; i < navigate.length; i++) {
+            if (unParsed.toLowerCase().contains(navigate[i])) {
+                int directionStringPosition = toParse.length;
+                navigation(toParse[directionStringPosition - 1]);
+                return;
+            }
+        }
+        for (int i = 0; i < help.length; i++) {
+            if (unParsed.toLowerCase().contains(help[i])) {
+                help();
+                return;
+            }
+        }
+        for (int i = 0; i < quit.length; i++) {
+            if (unParsed.toLowerCase().contains(quit[i])) {
+                System.out.println("Are you sure you would like to quit? (Y/N): ");
+                String yOrN = input.nextLine();
+                if (yOrN.equalsIgnoreCase("y")) {
+                    System.out.println("Thank you for playing");
+                    loop = true;
+                    return;
+                }
+            }
+        }
+        for (int i = 0; i < save.length; i++) {
+            if (unParsed.toLowerCase().contains(save[i])) {
+                saveGame();
+                return;
+            }
+            System.out.println("I don't recognise \"" + unParsed + "\"");
             System.out.println("Type \"Help\" if you would like to see a list of useful commands\n");
         }
     }
 
     public void help() {
         System.out.println("\"Where can I go\" \t\t to see a lift of directions you can go");
-        System.out.println("\"look <direction>\" \t\t to look in a direction to see what is there");
         System.out.println("\"Go <direction>\" \t\t to go in a direction");
         System.out.println("\"Look around\" \t\t\t to get a description of the room you are in and a list of items");
         System.out.println("\"Save\" \t\t\t\t\t to save the game");
@@ -118,8 +162,17 @@ public class Main {
     }
 
     public void printRoomDescription() {
-            System.out.println(roomList[roomNumber].getDescription());
+            System.out.println(roomList[roomNumber].getInitialDescription());
     }
+
+    public void printStaticItemDescription(String staticItem) {
+        for (int i = 0; i < staticItemList.length; i++) {
+            if (roomName.equalsIgnoreCase(staticItemList[i].getRoomName()) && staticItemList[i].getName().equalsIgnoreCase(staticItem)) {
+                System.out.println(staticItemList[i].getDescription());
+            }
+        }
+    }
+
 
     public void printStaticItemCurrentRoom() {
         int foundItem = 0;
@@ -150,12 +203,16 @@ public class Main {
     public void navigation(String direction) {
         if (direction.equalsIgnoreCase("north") && !roomList[roomNumber].getNorth().equals("null")) {
             roomName = roomList[roomNumber].getNorth();
+            System.out.println("You head North");
         } else if (direction.equalsIgnoreCase("east") && !roomList[roomNumber].getEast().equals("null")) {
             roomName = roomList[roomNumber].getEast();
+            System.out.println("You head East");
         } else if (direction.equalsIgnoreCase("south") && !roomList[roomNumber].getSouth().equals("null")) {
             roomName = roomList[roomNumber].getSouth();
+            System.out.println("You head South");
         } else if (direction.equalsIgnoreCase("west") && !roomList[roomNumber].getWest().equals("null")) {
             roomName = roomList[roomNumber].getWest();
+            System.out.println("You head West");
         } else {
             System.out.println("Can't go that way");
         }
@@ -163,6 +220,12 @@ public class Main {
             if (roomName.equals(roomList[i].getName())) {
                 roomNumber = roomList[i].getNumber();
             }
+        }
+        if (roomList[roomNumber].getInitialVisit() == 0) {
+            System.out.println(roomList[roomNumber].getInitialDescription());
+            roomList[roomNumber].setInitialVisit(1);
+        } else {
+            System.out.println(roomList[roomNumber].getDescription());
         }
     }
 
@@ -192,8 +255,7 @@ public class Main {
         } else if (direction.equalsIgnoreCase("west") && !roomList[roomNumber].getWest().equals("null")) {
             System.out.println("The " + roomList[roomNumber].getWest() + " is west\n");
         } else {
-            System.out.println("Can't go that way");
+            System.out.println("There is nothing to the " + direction);
         }
     }
-
 }

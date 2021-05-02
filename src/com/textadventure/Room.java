@@ -9,8 +9,10 @@ public class Room {
     private String west;
     private String east;
     private String description;
+    private String initialDescription;
+    private Integer initialVisit;
 
-    public Room(String name,Integer number, String north,  String east, String south, String west, String description) {
+    public Room(String name,Integer number, String north,  String east, String south, String west, String description, String initialDescription, Integer initialVisit) {
         this.setName(name);
         this.setNumber(number);
         this.setNorth(north);
@@ -18,6 +20,8 @@ public class Room {
         this.setWest(west);
         this.setEast(east);
         this.setDescription(description);
+        this.setInitialDescription(initialDescription);
+        this.setInitialVisit(initialVisit);
     }
     // Start of setters
     public void setName(String name) {
@@ -46,6 +50,11 @@ public class Room {
 
     public void setDescription(String description) { this.description = description; }
 
+    public void setInitialDescription(String initialDescription) { this.initialDescription = initialDescription; }
+
+    public void setInitialVisit(Integer initialVisit) { this.initialVisit = initialVisit; }
+
+
     // Start of getters
     public String getName() {
         return name;
@@ -72,4 +81,12 @@ public class Room {
     }
 
     public String getDescription() { return description; }
+
+    public String getInitialDescription() {
+        return initialDescription;
+    }
+
+    public Integer getInitialVisit() {
+        return initialVisit;
+    }
 }
