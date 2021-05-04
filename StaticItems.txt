@@ -1,4 +1,4 @@
 Mirror,Bathroom,You look in the mirror and see yourself staring back
 Bath,Bathroom,The bath has some water left in the bottom
-Sofa,Living Room,It's a leather sofa
-TV,Living Room,It's an old tv that looks like it was purchased in the early 2000s 
+Sofa,Lounge,It's a leather sofa
+TV,Lounge,It's an old tv that looks like it was purchased in the early 2000s 

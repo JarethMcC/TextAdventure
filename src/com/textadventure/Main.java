@@ -173,7 +173,6 @@ public class Main {
         }
     }
 
-
     public void printStaticItemCurrentRoom() {
         int foundItem = 0;
         for (int i = 0; i < staticItemList.length; i++){
