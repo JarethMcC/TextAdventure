@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    Room [] roomList = new Room[4];
-    StaticItems [] staticItemList = new StaticItems[4];
+    Room[] roomList = new Room[4];
+    StaticItems[] staticItemList = new StaticItems[4];
     int flag;
     String roomName;
     int roomNumber;
@@ -28,17 +28,73 @@ public class Main {
     }
 
     public void start() {
-        readRooms();
-        readSave();
-        readStaticItems();
+        mainMenu();
         while (!loop) {
             initialParse();
         }
     }
 
-    public void readRooms() {
+    public void mainMenu() {
+        while (!loop) {
+            Scanner userInput = new Scanner(System.in);
+            System.out.println("Text adventure\n");
+            System.out.println("1: New game");
+            System.out.println("2: Load game");
+            System.out.println("3: Exit\n");
+
+            String menuSelect = userInput.nextLine();
+            if (menuSelect.equals("1")) {
+                readRooms(0);
+                readSave(0);
+                readStaticItems(0);
+                return;
+            } else if (menuSelect.equals("2")) {
+                System.out.println("\nSelect a save file\n");
+                printSaveNames();
+                System.out.println("4: Delete a save\n");
+
+                System.out.println("If you do not select a file and press enter then you will return to the menu\n");
+                Scanner whichSave = new Scanner(System.in);
+                String saveSelect = whichSave.nextLine();
+                if (saveSelect.equals("1")) {
+                    readSave(1);
+                    readStaticItems(1);
+                    readRooms(1);
+                    return;
+                } else if (saveSelect.equals("2")) {
+                    readSave(2);
+                    readStaticItems(2);
+                    readRooms(2);
+                    return;
+                } else if (saveSelect.equals("3")) {
+                    readSave(3);
+                    readStaticItems(3);
+                    readRooms(3);
+                    return;
+                } else if (saveSelect.equals("4")) {
+                    System.out.println("Which save would you like to delete?\n");
+                } else {
+                    System.out.println(saveSelect + " is not a valid option\n");
+                }
+            } else if (menuSelect.equals("3")) {
+                System.out.println("Thank you for playing");
+                loop = true;
+            } else {
+                System.out.println(menuSelect + " is not a valid option\n");
+            }
+        }
+    }
+
+    public void readRooms(int menuOption) {
         try {
-            FileReader roomFile = new FileReader("Rooms.txt");
+            FileReader roomFile = new FileReader("Saves/NewRooms.txt");
+            if(menuOption == 1) {
+                roomFile = new FileReader("Saves/Rooms1.txt");
+            } else if (menuOption == 2) {
+                roomFile = new FileReader("Saves/Rooms2.txt");
+            } else if (menuOption == 3) {
+                roomFile = new FileReader("Saves/Rooms3.txt");
+            }
             Scanner fileReader = new Scanner(roomFile);
             int i = 0;
             while (fileReader.hasNextLine()) {
@@ -56,9 +112,16 @@ public class Main {
         }
     }
 
-    public void readStaticItems() {
+    public void readStaticItems(int menuOption) {
         try {
-            FileReader staticItemsFile = new FileReader("StaticItems.txt");
+            FileReader staticItemsFile = new FileReader("Saves/NewStaticItems.txt");
+            if(menuOption == 1) {
+                staticItemsFile = new FileReader("Saves/StaticItems1.txt");
+            } else if (menuOption == 2) {
+                staticItemsFile = new FileReader("Saves/StaticItems2.txt");
+            } else if (menuOption == 3) {
+                staticItemsFile = new FileReader("Saves/StaticItems3.txt");
+            }
             Scanner fileReader = new Scanner(staticItemsFile);
             int i = 0;
             while (fileReader.hasNextLine()) {
@@ -74,15 +137,23 @@ public class Main {
         }
     }
 
-    public void readSave() {
+    public void readSave(int menuOption) {
         try {
-            FileReader readSave = new FileReader("Save.txt");
+            FileReader readSave = new FileReader("Saves/NewSave.txt");
+            if(menuOption == 1) {
+                readSave = new FileReader("Saves/Save1.txt");
+            } else if (menuOption == 2) {
+                readSave = new FileReader("Saves/Save2.txt");
+            } else if (menuOption == 3) {
+                readSave = new FileReader("Saves/Save3.txt");
+            }
             Scanner fileReader = new Scanner(readSave);
             String readInput = fileReader.nextLine();
             String[] asList = readInput.split(",");
-            flag = Integer.parseInt(asList[0]);
-            roomName = asList[1];
-            roomNumber = Integer.parseInt(asList[2]);
+            flag = Integer.parseInt(asList[1]);
+            roomName = asList[2];
+            roomNumber = Integer.parseInt(asList[3]);
+            fileReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("Save.txt not found");
         }
@@ -188,11 +259,71 @@ public class Main {
         System.out.println();
     }
 
+    public void printSaveNames() {
+        try {
+            FileReader readSave = new FileReader("Saves/Save1.txt");
+            Scanner fileReader = new Scanner(readSave);
+            String readInput = fileReader.nextLine();
+            String[] asList = readInput.split(",");
+            System.out.println("1: " + asList[0]);
+
+            readSave = new FileReader("Saves/Save2.txt");
+            fileReader = new Scanner(readSave);
+            readInput = fileReader.nextLine();
+            asList = readInput.split(",");
+            System.out.println("2: " + asList[0]);
+
+            readSave = new FileReader("Saves/Save3.txt");
+            fileReader = new Scanner(readSave);
+            readInput = fileReader.nextLine();
+            asList = readInput.split(",");
+            System.out.println("3: " + asList[0]);
+            fileReader.close();
+        } catch (Exception e) {
+            System.out.println("A save file was not found");
+        }
+    }
+
     public void saveGame() {
         try {
-            FileWriter saveFile = new FileWriter("Save.txt");
-            saveFile.write(flag + "," + roomName + "," + roomNumber);
+            System.out.println("Which Save file would you like to save over?");
+            printSaveNames();
+            FileWriter saveFile = new FileWriter("Saves/Save1.txt");
+            FileWriter roomsFile = new FileWriter("Saves/Rooms1.txt");
+            FileWriter staticItemsFile = new FileWriter("Saves/StaticItems1.txt");
+            Scanner userInput = new Scanner(System.in);
+            String whichSaveFile = userInput.nextLine();
+            if (whichSaveFile.equals("1")) {
+                saveFile = new FileWriter("Saves/Save1.txt");
+                roomsFile = new FileWriter("Saves/Rooms1.txt");
+                staticItemsFile = new FileWriter("Saves/StaticItems1.txt");
+            } else if (whichSaveFile.equals("2")) {
+                saveFile = new FileWriter("Saves/Save2.txt");
+                roomsFile = new FileWriter("Saves/Rooms2.txt");
+                staticItemsFile = new FileWriter("Saves/StaticItems2.txt");
+            } else if (whichSaveFile.equals("3")) {
+                saveFile = new FileWriter("Saves/Save3.txt");
+                roomsFile = new FileWriter("Saves/Rooms3.txt");
+                staticItemsFile = new FileWriter("Saves/StaticItems.txt");
+            } else {
+                System.out.println(whichSaveFile + "Is not a valid save file");
+            }
+            System.out.println("What would you like to name your save?: ");
+            String newSaveName = userInput.nextLine();
+            saveFile.write(newSaveName + "," + flag + "," + roomName + "," + roomNumber);
+            for (int i = 0; i < roomList.length; i++) {
+                roomsFile.write(roomList[i].getName() + "," + roomList[i].getNumber() + "," + roomList[i].getNorth()
+                        + "," + roomList[i].getEast() + "," + roomList[i].getSouth() + "," + roomList[i].getWest()
+                        + "," + roomList[i].getDescription() + "," + roomList[i].getInitialDescription() + ","
+                        + roomList[i].getInitialVisit() + "\n");
+            }
+            for (int e = 0; e < roomList.length; e++) {
+                staticItemsFile.write(staticItemList[e].getName() + "," + staticItemList[e].getRoomName() + ","
+                                        + staticItemList[e].getDescription() + "\n");
+            }
             saveFile.close();
+            roomsFile.close();
+            staticItemsFile.close();
             System.out.println("Game has been saved\n");
         } catch (IOException e) {
             System.out.println("Save file was not found");

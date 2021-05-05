@@ -5,9 +5,9 @@ public class Room {
     private String name;
     private Integer number;
     private String north;
+    private String east;
     private String south;
     private String west;
-    private String east;
     private String description;
     private String initialDescription;
     private Integer initialVisit;
